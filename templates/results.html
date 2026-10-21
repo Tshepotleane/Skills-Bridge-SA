@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Your Skills Report — SkillsBridge SA{% endblock %}
+{% block content %}
+<section class="results-header">
+  <a class="back-link" href="{{ url_for('index') }}">← Back to analyzer</a>
+  <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR SKILLS REPORT</div>
+  <h1>A clearer view of <em>your next step.</em></h1>
+  <p>Prepared for {{ analysis.candidate_name }} · Target: {{ analysis.target_role }}</p>
+</section>
+<section class="results-grid">
+  <article class="score-card">
+    <div class="card-kicker">SKILLS OVERLAP</div>
+    <div class="score-ring" style="--score: {{ analysis.score }};"><div><strong>{{ analysis.score }}<small>%</small></strong><span>match score</span></div></div>
+    <h2>{{ analysis.job_title }}</h2>
+    <p>{{ analysis.message }}</p>
+    <div class="score-legend"><span><i class="legend-dot matched-dot"></i>{{ analysis.matched|length }} matched</span><span><i class="legend-dot missing-dot"></i>{{ analysis.missing|length }} to build</span></div>
+  </article>
+  <article class="detail-card">
+    <div class="detail-heading"><span class="detail-symbol success-symbol">✓</span><div><h3>Skills you matched</h3><p>Skills found in both your input and the job description.</p></div></div>
+    {% if analysis.matched %}<div class="skill-list">{% for skill in analysis.matched %}<span class="skill-pill matched-pill">{{ skill }}</span>{% endfor %}</div>{% else %}<div class="empty-state">No catalogue matches yet. Try adding the exact technical skills you have used.</div>{% endif %}
+    <div class="detail-heading missing-heading"><span class="detail-symbol gap-symbol">＋</span><div><h3>Skills to explore</h3><p>Skills listed for this opportunity but not detected in your input.</p></div></div>
+    {% if analysis.missing %}<div class="skill-list">{% for skill in analysis.missing %}<span class="skill-pill missing-pill">{{ skill }}</span>{% endfor %}</div>{% else %}<div class="empty-state">No missing catalogue skills were detected. Check the complete job requirements too.</div>{% endif %}
+    {% if analysis.extra %}<div class="extra-skills"><strong>Other relevant skills in your profile</strong><div class="skill-list">{% for skill in analysis.extra %}<span class="skill-pill neutral-pill">{{ skill }}</span>{% endfor %}</div></div>{% endif %}
+  </article>
+</section>
+{% if analysis.used_role_baseline %}<div class="notice"><strong>Role baseline used:</strong> We could not detect catalogue skills in the pasted description, so the report used a starter skills profile for {{ analysis.target_role }}. Paste a more detailed job advert for a more relevant comparison.</div>{% endif %}
+<section class="roadmap-section">
+  <div class="section-heading"><div><div class="eyebrow">YOUR NEXT STEPS</div><h2>Build your <em>roadmap.</em></h2></div><p>Choose one skill at a time. Learning plus practical evidence makes progress easier to demonstrate.</p></div>
+  {% if analysis.roadmap %}
+  <div class="roadmap-list">{% for item in analysis.roadmap %}<article class="roadmap-item"><div class="roadmap-number">{{ "%02d"|format(loop.index) }}</div><div class="roadmap-copy"><span class="roadmap-label">SKILL TO DEVELOP</span><h3>{{ item.skill }}</h3><p>Study the basics, practise a small task, then add your work to a project or portfolio.</p></div><a class="resource-link" href="{{ item.url }}" target="_blank" rel="noopener noreferrer">{{ item.resource }} <span>↗</span></a></article>{% endfor %}</div>
+  {% else %}<div class="empty-state">Your current input covers the skills detected for this role. Explore the matched skills more deeply and build a project to demonstrate them.</div>{% endif %}
+</section>
+<section class="report-actions"><div><span class="eyebrow">KEEP MOVING</span><h2>Your next step is <em>action.</em></h2><p>This report is a starting point. Review the full job advert and use projects to prove what you can do.</p></div><div class="action-buttons"><button class="button button-secondary" onclick="window.print()" type="button">Print / save report <span>↗</span></button><a class="button button-primary" href="{{ url_for('index') }}">Analyse another role <span>→</span></a></div></section>
+<div class="disclaimer">SkillsBridge SA offers educational guidance only. Its score is based on detected catalogue skills, not a full assessment of ability, experience, qualifications, or employability.</div>
+{% endblock %}

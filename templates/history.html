@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Recent Analyses — SkillsBridge SA{% endblock %}
+{% block content %}
+<section class="results-header">
+  <a class="back-link" href="{{ url_for('index') }}">← Back to analyzer</a>
+  <div class="eyebrow">LOCAL PROJECT HISTORY</div>
+  <h1>Recent <em>analyses.</em></h1>
+  <p>The latest 25 reports saved in this application's local SQLite database.</p>
+</section>
+<section class="history-panel">
+  {% if analyses %}
+  <div class="history-table-wrap"><table class="history-table"><thead><tr><th>Candidate</th><th>Target role</th><th>Job title</th><th>Score</th><th>Date</th></tr></thead><tbody>
+  {% for item in analyses %}<tr><td>{{ item['candidate_name'] }}</td><td>{{ item['target_role'] }}</td><td>{{ item['job_title'] }}</td><td><span class="table-score">{{ item['match_score'] }}%</span></td><td>{{ item['created_at'] }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  <p class="table-note">This is local demo history, not a user account system. Do not enter sensitive personal information.</p>
+  {% else %}
+  <div class="history-empty"><span class="empty-symbol">⌁</span><h2>No analyses yet</h2><p>Complete a skills analysis and your latest report will appear here.</p><a class="button button-primary" href="{{ url_for('index') }}">Start an analysis <span>↗</span></a></div>
+  {% endif %}
+</section>
+{% endblock %}
